@@ -29,6 +29,9 @@ from dataset import TranslationDataset
 
 import ipdb
 
+from albumentations.core.transforms_interface import DualTransform, BasicTransform
+
+
 logger = logging.getLogger(__name__)
 
 
