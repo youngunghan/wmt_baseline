@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 """
 Add arguments here
 """
+print("hello")
 
 @dataclass
 class ModelArguments:
