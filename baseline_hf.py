@@ -29,7 +29,7 @@ from dataset import TranslationDataset
 
 import ipdb
 
-from albumentations.core.transforms_interface import DualTransform, BasicTransform
+#from albumentations.core.transforms_interface import DualTransform, BasicTransform
 
 
 logger = logging.getLogger(__name__)
@@ -38,7 +38,6 @@ logger = logging.getLogger(__name__)
 """
 Add arguments here
 """
-print("hello")
 
 @dataclass
 class ModelArguments:
@@ -215,6 +214,7 @@ def main():
     train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
+    print(train_data)
 
 
     if data_args.max_train_samples is not None:
