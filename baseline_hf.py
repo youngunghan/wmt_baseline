@@ -38,6 +38,32 @@ logger = logging.getLogger(__name__)
 """
 Add arguments here
 """
+def translate(texts, model, tokenizer, language="fr"):
+    # Prepare the text data into appropriate format for the model
+    template = lambda text: f"{text}" if language == "en" else f">>{language}<< {text}"
+    src_texts = [template(text) for text in texts]
+
+    # Tokenize the texts
+    encoded = tokenizer.prepare_seq2seq_batch(src_texts)
+    
+    # Generate translation using model
+    translated = model.generate(**encoded)
+
+    # Convert the generated tokens indices back into text
+    translated_texts = tokenizer.batch_decode(translated, skip_special_tokens=True)
+    
+    return translated_texts
+
+def back_translate(texts, source_lang="en", target_lang="fr"):
+    # Translate from source to target language
+    fr_texts = translate(texts, target_model, target_tokenizer, 
+                         language=target_lang)
+
+    # Translate from target language back to source language
+    back_translated_texts = translate(fr_texts, en_model, en_tokenizer, 
+                                      language=source_lang)
+    
+    return back_translated_texts
 
 @dataclass
 class ModelArguments:
@@ -215,6 +241,9 @@ def main():
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
     print("train_data: ", train_data)
+    print("train_data len: ", len(train_data))
+    print("train_data[0]: ", train_data[0])
+    print("train_data[0] len: ", len(train_data[0]))
 
 
     if data_args.max_train_samples is not None:
