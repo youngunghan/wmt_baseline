@@ -37,6 +37,6 @@ class TranslationDataset(Dataset):
 
         #pdb.set_trace()
         model_inputs["labels"] = labels["input_ids"]
-        print(model_inputs)
+        print("model inputs:", model_inputs)
 
         return model_inputs
