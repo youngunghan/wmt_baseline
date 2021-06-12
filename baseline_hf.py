@@ -1,4 +1,5 @@
-import numpy as np
+print("baseline_hf.py")
+import numpy as np 
 import os
 import sys
 import logging
@@ -33,7 +34,7 @@ import ipdb
 
 
 logger = logging.getLogger(__name__)
-print("baseline_hf.py")
+
 
 """
 Add arguments here
