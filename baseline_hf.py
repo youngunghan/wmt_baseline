@@ -206,7 +206,6 @@ class DataTrainingArguments:
             self.val_max_target_length = self.max_target_length
         print(self.val_max_target_length, self.max_target_length)
 
-'''
 def main():
 
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
@@ -422,4 +421,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-'''
