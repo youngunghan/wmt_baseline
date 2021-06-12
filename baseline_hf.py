@@ -214,7 +214,6 @@ def main():
     train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
-    print(train_data)
 
 
     if data_args.max_train_samples is not None:
@@ -419,6 +418,8 @@ def main():
     #    trainer.push_to_hub()
 
     return results
-main()
+
+'''
 if __name__ == "__main__":
     main()
+'''
