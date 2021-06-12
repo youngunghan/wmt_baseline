@@ -419,6 +419,6 @@ def main():
     #    trainer.push_to_hub()
 
     return results
-
+main()
 if __name__ == "__main__":
     main()
