@@ -1,4 +1,3 @@
-print("baseline_hf.py")
 import numpy as np 
 import os
 import sys
@@ -39,9 +38,7 @@ logger = logging.getLogger(__name__)
 """
 Add arguments here
 """
-print("hello")
 
-print("ModelArguments")
 @dataclass
 class ModelArguments:
     """
@@ -77,7 +74,6 @@ class ModelArguments:
         },
     )
 
-print("DataTrainingArguments")
 @dataclass
 class DataTrainingArguments:
     """
@@ -209,7 +205,7 @@ class DataTrainingArguments:
             self.val_max_target_length = self.max_target_length
         print(self.val_max_target_length, self.max_target_length)
 
-print("main")
+print("Hello")
 def main():
 
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
@@ -218,6 +214,7 @@ def main():
     train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
+    print("train_data: ", train_data)
 
 
     if data_args.max_train_samples is not None:
