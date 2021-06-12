@@ -33,7 +33,7 @@ import ipdb
 
 
 logger = logging.getLogger(__name__)
-
+print("baseline_hf.py")
 
 """
 Add arguments here
