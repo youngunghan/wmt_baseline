@@ -39,6 +39,7 @@ logger = logging.getLogger(__name__)
 Add arguments here
 """
 
+print("ModelArguments")
 @dataclass
 class ModelArguments:
     """
@@ -74,7 +75,7 @@ class ModelArguments:
         },
     )
 
-
+print("DataTrainingArguments")
 @dataclass
 class DataTrainingArguments:
     """
@@ -206,6 +207,7 @@ class DataTrainingArguments:
             self.val_max_target_length = self.max_target_length
         print(self.val_max_target_length, self.max_target_length)
 
+print("main")
 def main():
 
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
