@@ -255,37 +255,17 @@ def main():
 
     print("en_data:", en_data)
     print("fr_data:", fr_data)
-
-    aug_data = []
-    for i in range(3):
-        en_aug_data = translate_fr_to_en(fr_data[0])
-        fr_aug_data = translate_en_to_fr(en_data[0])
-        aug_data = [en_aug_data, fr_aug_data]
-    print(aug_data)
     '''
-    #fr_aug_data = [translate_en_to_fr(en_d) for en_d in en_data]
-    #en_aug_data = [translate_fr_to_en(fr_d) for fr_d in fr_data]
-    en_aug_data = translate_fr_to_en(fr_data[0])
-    fr_aug_data = translate_en_to_fr(en_data[0])
-    print("en_aug: ", en_aug_data)
-    print("fr_aug: ", fr_aug_data)
-    en_aug_data = translate_fr_to_en(fr_data[1])
-    fr_aug_data = translate_en_to_fr(en_data[1])
-    print("en_aug: ", en_aug_data)
-    print("fr_aug: ", fr_aug_data)
-    en_aug_data = translate_fr_to_en(fr_data[2])
-    fr_aug_data = translate_en_to_fr(en_data[2])
-    #print("en_aug: ", en_aug_data)
-    #print("fr_aug: ", fr_aug_data)
-    print("en_aug: ", en_aug_data)
-    print("fr_aug: ", fr_aug_data)
-
+    aug_data = []
+    for i in range(10):
+        en_aug_data = translate_fr_to_en(fr_data[i])
+        fr_aug_data = translate_en_to_fr(en_data[i])
+        aug_data = [en_aug_data, fr_aug_data]
+    
     aug_data = [[en_d, fr_d] for en_d, fr_d in zip(en_data, fr_data)]
     print(aug_data)
     train_data.extend(aug_data)
     '''
-
-    return 
     
     '''
     print("en_data:", en_data)
@@ -295,8 +275,12 @@ def main():
     train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
-    
-
+    aug_data = []
+    for i in range(10):
+        en_aug_data = translate_fr_to_en(fr_data[i])
+        fr_aug_data = translate_en_to_fr(en_data[i])
+        aug_data = [en_aug_data, fr_aug_data]
+    train_data.extend(aug_data)
 
     if data_args.max_train_samples is not None:
         # Recommended to use a pre-shuffled train set
