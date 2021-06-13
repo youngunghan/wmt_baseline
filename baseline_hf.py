@@ -237,7 +237,10 @@ def main():
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
    
-    train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
+    eng_texts = [line.rstrip('\n').split('\t')[0] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
+    print(eng_texts)
+    return
+    #train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
     print("train_data: ", train_data)
