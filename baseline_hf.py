@@ -29,6 +29,8 @@ from dataset import TranslationDataset
 
 import ipdb
 
+import random
+
 logger = logging.getLogger(__name__)
 
 
@@ -276,7 +278,8 @@ def main():
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
     aug_data = []
-    for i in range(3):
+    for _ in range(50):
+        i = random.randrange(len(en_data)) 
         en_aug_data = translate_fr_to_en(fr_data[i])
         fr_aug_data = translate_en_to_fr(en_data[i])
         aug_data.append([en_aug_data, fr_aug_data])
