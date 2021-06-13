@@ -237,16 +237,21 @@ def main():
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
    
-    eng_texts = [line.rstrip('\n').split('\t')[0] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
-    print("eng_texts:", eng_texts)
-    return
-    #train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
+    en_data = [line.rstrip('\n').split('\t')[0] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
+    fr_data = [line.rstrip('\n').split('\t')[1] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
+    en_aug_data = back_translate(en_data, source_lang="en", target_lang="fr")
+    fr_aug_data = back_translate(fr_data, source_lang="fr", target_lang="en")
+    print("en_aug: ", en_aug_data)
+    print("fr_aug: ", fr_aug_data)
+    
+    train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
     print("train_data: ", train_data)
     print("train_data len: ", len(train_data))
     print("train_data[0]: ", train_data[0])
     print("train_data[0] len: ", len(train_data[0]))
+    return
 
 
     if data_args.max_train_samples is not None:
