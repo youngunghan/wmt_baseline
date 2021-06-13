@@ -37,10 +37,10 @@ Add arguments here
 """
 def translate_en_to_fr(text):
     # Initialize the tokenizer
-    tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
+    tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-ROMANCE")
 
     # Initialize the model
-    model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
+    model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-en-ROMANCE")
 
     # Tokenize text
     #text = ['I might be late tonight', 'What a movie, so bad', 'That was very kind']
