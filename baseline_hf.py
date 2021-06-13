@@ -30,6 +30,7 @@ from dataset import TranslationDataset
 import ipdb
 
 #from albumentations.core.transforms_interface import DualTransform, BasicTransform
+from nltk.corpus import wordnet 
 
 
 logger = logging.getLogger(__name__)
@@ -38,6 +39,57 @@ logger = logging.getLogger(__name__)
 """
 Add arguments here
 """
+# Helper function to download data for a language
+def download(model_name):
+  tokenizer = MarianTokenizer.from_pretrained(model_name)
+  model = MarianMTModel.from_pretrained(model_name)
+  return tokenizer, model
+
+# download model for English -> Romance
+tmp_lang_tokenizer, tmp_lang_model = download('Helsinki-NLP/opus-mt-en-ROMANCE')
+# download model for Romance -> English
+src_lang_tokenizer, src_lang_model = download('Helsinki-NLP/opus-mt-ROMANCE-en')
+
+def translate(texts, model, tokenizer, language):
+  """Translate texts into a target language"""
+  # Format the text as expected by the model
+  formatter_fn = lambda txt: f"{txt}" if language == "en" else f">>{language}<< {txt}"
+  original_texts = [formatter_fn(txt) for txt in texts]
+
+  # Tokenize (text to tokens)
+  tokens = tokenizer.prepare_seq2seq_batch(original_texts)
+
+  # Translate
+  translated = model.generate(**tokens)
+
+  # Decode (tokens to text)
+  translated_texts = tokenizer.batch_decode(translated, skip_special_tokens=True)
+
+  return translated_texts
+
+def back_translate(texts, language_src, language_dst):
+  """Implements back translation"""
+  # Translate from source to target language
+  translated = translate(texts, tmp_lang_model, tmp_lang_tokenizer, language_dst)
+
+  # Translate from target language back to source language
+  back_translated = translate(translated, src_lang_model, src_lang_tokenizer, language_src)
+
+  return back_translated
+
+src_texts = ['I might be late tonight', 'What a movie, so bad', 'That was very kind']
+back_texts = back_translate(src_texts, "en", "fr")
+
+print(back_texts)
+# ['I might be late tonight.', 'What a movie, so bad', 'That was very kind of you.']
+
+src_texts = ['I might be late tonight', 'What a movie, so bad', 'That was very kind']
+
+back_texts = back_translate(src_texts, "en", "es")
+print(back_texts)
+# ['I could be late tonight.', 'What a bad movie!', 'That was very kind of you.']
+
+'''
 target_model_name = 'Helsinki-NLP/opus-mt-en-ROMANCE'
 target_tokenizer = MarianTokenizer.from_pretrained(target_model_name)
 target_model = MarianMTModel.from_pretrained(target_model_name)
@@ -71,7 +123,7 @@ def back_translate(texts, source_lang="en", target_lang="fr"):
     back_translated_texts = translate(fr_texts, en_model, en_tokenizer, 
                                       language=source_lang)
     
-    return back_translated_texts
+    return back_translated_texts'''
 
 @dataclass
 class ModelArguments:
@@ -245,18 +297,14 @@ def main():
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
-    en_texts = ['This is so cool', 'I hated the food', 'They were very helpful']
-
-    aug_texts = back_translate(en_texts, source_lang="en", target_lang="es")
-    print("aug_texts:", aug_texts)
-   
     en_data = [line.rstrip('\n').split('\t')[0] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     fr_data = [line.rstrip('\n').split('\t')[1] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
-    en_aug_data = back_translate(en_data, source_lang="en", target_lang="fr")
-    fr_aug_data = back_translate(fr_data, source_lang="fr", target_lang="en")
+    ##en_aug_data = back_translate(en_data, source_lang="en", target_lang="fr")
+    ##fr_aug_data = back_translate(fr_data, source_lang="fr", target_lang="en")
     print("en_aug: ", en_aug_data)
     print("fr_aug: ", fr_aug_data)
-    
+
+    '''
     train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
