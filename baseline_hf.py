@@ -252,19 +252,17 @@ def main():
     print("en_data:", en_data)
     print("fr_data:", fr_data)
 
-    en_aug_data = translate_fr_to_en(en_data)
-    fr_aug_data = translate_en_to_fr(fr_data)
-
-    print("en_aug: ", en_aug_data)
-    print("fr_aug: ", fr_aug_data)
-    return 
     
-    #fr_aug_data = [translate_en_to_fr(en_d) for en_d in en_data]
-    #en_aug_data = [translate_fr_to_en(fr_d) for fr_d in fr_data]
+    
+    fr_aug_data = [translate_en_to_fr(en_d) for en_d in en_data]
+    en_aug_data = [translate_fr_to_en(fr_d) for fr_d in fr_data]
     #en_aug_data = translate_fr_to_en(fr_data[0])
     #fr_aug_data = translate_en_to_fr(en_data[0])
     #print("en_aug: ", en_aug_data)
     #print("fr_aug: ", fr_aug_data)
+    print("en_aug: ", en_aug_data)
+    print("fr_aug: ", fr_aug_data)
+    return 
     
     '''
     print("en_data:", en_data)
