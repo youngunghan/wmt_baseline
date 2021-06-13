@@ -23,7 +23,7 @@ from transformers import (
         Seq2SeqTrainingArguments,
         Seq2SeqTrainer,
 )
-from transformers import MarianConfig, MarianMTModel
+from transformers import MarianConfig, MarianMTModel, MarianTokenizer
 
 from dataset import TranslationDataset
 
@@ -38,6 +38,14 @@ logger = logging.getLogger(__name__)
 """
 Add arguments here
 """
+target_model_name = 'Helsinki-NLP/opus-mt-en-ROMANCE'
+target_tokenizer = MarianTokenizer.from_pretrained(target_model_name)
+target_model = MarianMTModel.from_pretrained(target_model_name)
+
+en_model_name = 'Helsinki-NLP/opus-mt-ROMANCE-en'
+en_tokenizer = MarianTokenizer.from_pretrained(en_model_name)
+en_model = MarianMTModel.from_pretrained(en_model_name)
+
 def translate(texts, model, tokenizer, language="fr"):
     # Prepare the text data into appropriate format for the model
     template = lambda text: f"{text}" if language == "en" else f">>{language}<< {text}"
