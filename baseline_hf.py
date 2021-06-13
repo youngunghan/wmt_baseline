@@ -39,46 +39,44 @@ logger = logging.getLogger(__name__)
 Add arguments here
 """
 def translate_en_to_fr(text):
-  # Initialize the tokenizer
-  tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
+    # Initialize the tokenizer
+    tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
 
-  # Initialize the model
-  model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
+    # Initialize the model
+    model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
 
-  # Tokenize text
-  #text = ['I might be late tonight', 'What a movie, so bad', 'That was very kind']
-  #tokenized_text = tokenizer.prepare_seq2seq_batch([text])
-  tokenized_text = tokenizer.prepare_seq2seq_batchtext, return_tensors='pt')
+    # Tokenize text
+    #text = ['I might be late tonight', 'What a movie, so bad', 'That was very kind']
+    #tokenized_text = tokenizer.prepare_seq2seq_batch([text])
+    tokenized_text = tokenizer.prepare_seq2seq_batch(text, return_tensors='pt')
 
-  # Perform translation and decode the output
-  translation = model.generate(**tokenized_text)
+    # Perform translation and decode the output
+    translation = model.generate(**tokenized_text)
 
-  #translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)[0]
-  translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)
+    #translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)[0]
+    translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)
 
-  return translated_text
-
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+    return translated_text
 
 def translate_fr_to_en(text):
-  # Initialize the tokenizer
-  tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
+    # Initialize the tokenizer
+    tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
 
-  # Initialize the model
-  model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
+    # Initialize the model
+    model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
 
-  # Tokenize text
-  #text = ['Esta noite, talvez chegue tarde.', 'Que film, si mal', 'Ha sido muy amable.']
+    # Tokenize text
+    #text = ['Esta noite, talvez chegue tarde.', 'Que film, si mal', 'Ha sido muy amable.']
 
-  #tokenized_text = tokenizer.prepare_seq2seq_batch([text])
-  tokenized_text = tokenizer.prepare_seq2seq_batch(text, return_tensors='pt')
+    #tokenized_text = tokenizer.prepare_seq2seq_batch([text])
+    tokenized_text = tokenizer.prepare_seq2seq_batch(text, return_tensors='pt')
 
-  # Perform translation and decode the output
-  translation = model.generate(**tokenized_text)
-  #translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)[0]
-  translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)
+    # Perform translation and decode the output
+    translation = model.generate(**tokenized_text)
+    #translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)[0]
+    translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)
 
-  return translated_text
+    return translated_text
 
 @dataclass
 class ModelArguments:
