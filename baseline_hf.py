@@ -276,10 +276,10 @@ def main():
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
     aug_data = []
-    for i in range(10):
+    for i in range(3):
         en_aug_data = translate_fr_to_en(fr_data[i])
         fr_aug_data = translate_en_to_fr(en_data[i])
-        aug_data = [en_aug_data, fr_aug_data]
+        aug_data.append([en_aug_data, fr_aug_data])
     train_data.extend(aug_data)
 
     if data_args.max_train_samples is not None:
