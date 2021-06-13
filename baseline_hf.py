@@ -244,6 +244,11 @@ def main():
 
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+
+    en_texts = ['This is so cool', 'I hated the food', 'They were very helpful']
+
+    aug_texts = back_translate(en_texts, source_lang="en", target_lang="es")
+    print("aug_texts:", aug_texts)
    
     en_data = [line.rstrip('\n').split('\t')[0] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     fr_data = [line.rstrip('\n').split('\t')[1] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
