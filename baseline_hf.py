@@ -231,14 +231,14 @@ class DataTrainingArguments:
             self.val_max_target_length = self.max_target_length
         print(self.val_max_target_length, self.max_target_length)
 
-print("Main")
+print("main1")
 def main():
 
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
    
     eng_texts = [line.rstrip('\n').split('\t')[0] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
-    print(eng_texts)
+    print("eng_texts:", eng_texts)
     return
     #train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
