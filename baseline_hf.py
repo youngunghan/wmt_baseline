@@ -296,7 +296,7 @@ def main():
 
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
-
+    return
     en_data = [line.rstrip('\n').split('\t')[0] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     fr_data = [line.rstrip('\n').split('\t')[1] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     ##en_aug_data = back_translate(en_data, source_lang="en", target_lang="fr")
@@ -304,7 +304,7 @@ def main():
     print("en_aug: ", en_aug_data)
     print("fr_aug: ", fr_aug_data)
 
-    '''
+    
     train_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     dev_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'dev.tsv', 'r').readlines()]
     test_data = [line.rstrip('\n').split('\t') for line in open(Path(data_args.data_path) / 'test.tsv', 'r').readlines()]
