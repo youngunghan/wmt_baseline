@@ -23,14 +23,13 @@ from transformers import (
         Seq2SeqTrainingArguments,
         Seq2SeqTrainer,
 )
-from transformers import MarianConfig, MarianMTModel, MarianTokenizer
+from transformers import MarianConfig, MarianMTModel, AutoTokenizer, AutoModelForSeq2SeqLM
 
 from dataset import TranslationDataset
 
 import ipdb
 
-#from albumentations.core.transforms_interface import DualTransform, BasicTransform
-from nltk.corpus import wordnet 
+
 
 
 logger = logging.getLogger(__name__)
@@ -39,91 +38,47 @@ logger = logging.getLogger(__name__)
 """
 Add arguments here
 """
-# Helper function to download data for a language
-def download(model_name):
-  tokenizer = MarianTokenizer.from_pretrained(model_name)
-  model = MarianMTModel.from_pretrained(model_name)
-  return tokenizer, model
+def translate_en_to_fr(text):
+  # Initialize the tokenizer
+  tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
 
-# download model for English -> Romance
-tmp_lang_tokenizer, tmp_lang_model = download('Helsinki-NLP/opus-mt-en-ROMANCE')
-# download model for Romance -> English
-src_lang_tokenizer, src_lang_model = download('Helsinki-NLP/opus-mt-ROMANCE-en')
+  # Initialize the model
+  model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
 
-def translate(texts, model, tokenizer, language):
-  """Translate texts into a target language"""
-  # Format the text as expected by the model
-  formatter_fn = lambda txt: f"{txt}" if language == "en" else f">>{language}<< {txt}"
-  original_texts = [formatter_fn(txt) for txt in texts]
+  # Tokenize text
+  #text = ['I might be late tonight', 'What a movie, so bad', 'That was very kind']
+  #tokenized_text = tokenizer.prepare_seq2seq_batch([text])
+  tokenized_text = tokenizer.prepare_seq2seq_batchtext, return_tensors='pt')
 
-  # Tokenize (text to tokens)
-  tokens = tokenizer.prepare_seq2seq_batch(original_texts)
+  # Perform translation and decode the output
+  translation = model.generate(**tokenized_text)
 
-  # Translate
-  translated = model.generate(**tokens)
+  #translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)[0]
+  translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)
 
-  # Decode (tokens to text)
-  translated_texts = tokenizer.batch_decode(translated, skip_special_tokens=True)
+  return translated_text
 
-  return translated_texts
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-def back_translate(texts, language_src, language_dst):
-  """Implements back translation"""
-  # Translate from source to target language
-  translated = translate(texts, tmp_lang_model, tmp_lang_tokenizer, language_dst)
+def translate_fr_to_en(text):
+  # Initialize the tokenizer
+  tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
 
-  # Translate from target language back to source language
-  back_translated = translate(translated, src_lang_model, src_lang_tokenizer, language_src)
+  # Initialize the model
+  model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-ROMANCE-en")
 
-  return back_translated
+  # Tokenize text
+  #text = ['Esta noite, talvez chegue tarde.', 'Que film, si mal', 'Ha sido muy amable.']
 
-src_texts = ['I might be late tonight', 'What a movie, so bad', 'That was very kind']
-back_texts = back_translate(src_texts, "en", "fr")
+  #tokenized_text = tokenizer.prepare_seq2seq_batch([text])
+  tokenized_text = tokenizer.prepare_seq2seq_batch(text, return_tensors='pt')
 
-print(back_texts)
-# ['I might be late tonight.', 'What a movie, so bad', 'That was very kind of you.']
+  # Perform translation and decode the output
+  translation = model.generate(**tokenized_text)
+  #translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)[0]
+  translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)
 
-src_texts = ['I might be late tonight', 'What a movie, so bad', 'That was very kind']
-
-back_texts = back_translate(src_texts, "en", "es")
-print(back_texts)
-# ['I could be late tonight.', 'What a bad movie!', 'That was very kind of you.']
-
-'''
-target_model_name = 'Helsinki-NLP/opus-mt-en-ROMANCE'
-target_tokenizer = MarianTokenizer.from_pretrained(target_model_name)
-target_model = MarianMTModel.from_pretrained(target_model_name)
-
-en_model_name = 'Helsinki-NLP/opus-mt-ROMANCE-en'
-en_tokenizer = MarianTokenizer.from_pretrained(en_model_name)
-en_model = MarianMTModel.from_pretrained(en_model_name)
-
-def translate(texts, model, tokenizer, language="fr"):
-    # Prepare the text data into appropriate format for the model
-    template = lambda text: f"{text}" if language == "en" else f">>{language}<< {text}"
-    src_texts = [template(text) for text in texts]
-
-    # Tokenize the texts
-    encoded = tokenizer.prepare_seq2seq_batch(src_texts)
-    
-    # Generate translation using model
-    translated = model.generate(**encoded)
-
-    # Convert the generated tokens indices back into text
-    translated_texts = tokenizer.batch_decode(translated, skip_special_tokens=True)
-    
-    return translated_texts
-
-def back_translate(texts, source_lang="en", target_lang="fr"):
-    # Translate from source to target language
-    fr_texts = translate(texts, target_model, target_tokenizer, 
-                         language=target_lang)
-
-    # Translate from target language back to source language
-    back_translated_texts = translate(fr_texts, en_model, en_tokenizer, 
-                                      language=source_lang)
-    
-    return back_translated_texts'''
+  return translated_text
 
 @dataclass
 class ModelArguments:
@@ -291,16 +246,16 @@ class DataTrainingArguments:
             self.val_max_target_length = self.max_target_length
         print(self.val_max_target_length, self.max_target_length)
 
-print("main3")
+print("main4")
 def main():
 
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
-    return
+    
     en_data = [line.rstrip('\n').split('\t')[0] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
     fr_data = [line.rstrip('\n').split('\t')[1] for line in open(Path(data_args.data_path) / 'train.tsv', 'r').readlines()]
-    ##en_aug_data = back_translate(en_data, source_lang="en", target_lang="fr")
-    ##fr_aug_data = back_translate(fr_data, source_lang="fr", target_lang="en")
+    en_aug_data = translate_fr_to_en(fr_data)
+    fr_aug_data = translate_en_to_fr(en_data)
     print("en_aug: ", en_aug_data)
     print("fr_aug: ", fr_aug_data)
 
